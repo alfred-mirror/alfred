@@ -60,7 +60,6 @@ widgetRouter.post('/new', mAuth(), jsonParser, (req, res) => {
     }
 
     newWidget.save((err, savedWidget) => {
-      
       // Errors
       if (err) return handleError.dbError(err, res);
       if (!savedWidget) return handleError.noData('Could not create', res);

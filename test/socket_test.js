@@ -21,7 +21,7 @@ const baseURI = 'http://localhost:8080';
 var token, user, config, clientSocket;
 
 // Connect to Socket
-describe('The socket routes', (done) => {
+describe('The socket routes', () => {
   // Create Client
   beforeEach((done) => {
     clientSocket = clientIO.connect(baseURI);
@@ -63,6 +63,70 @@ describe('The socket routes', (done) => {
       });
   });
 
+  // Create Test Modules
+  before((done) => {
+    // Module Types
+    var types = ['weather', 'time', 'greeting', 'news', 'commute'];
+    // Create all
+    types.forEach((type, index) => {
+
+      // Create request body
+      var body = {
+        type: type,
+        name: type,
+        options: {
+          origin: {
+            lat: 48,
+            long: -120
+          },
+          destination: {
+            lat: 49,
+            long: -120
+          }
+        }
+      };
+
+      // Create test widgets
+      request('localhost:8080')
+        .post('/widget/new')
+        .set('token', token)
+        .send(body)
+        .end((err, res) => {
+          expect(err).to.eql(null);
+          if (index === types.length - 1) {
+            done();
+          }
+        });
+    });
+  });
+
+  // Set widgets in config
+  before((done) => {
+    request('localhost:8080')
+      .get('/widget/')
+      .set('token', token)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        // Assign Modules
+        res.body.forEach((module, index) => {
+          config.modules[index] = module._id;
+        });
+        // Done
+        done();
+      });
+  });
+
+  before((done) => {
+    request('localhost:8080')
+      .put('/dashboard/config/' + config._id)
+      .set('token', token)
+      .send(config)
+      .end((err, res) => {
+        expect(err).to.eql(null);
+        done();
+      });
+  });
+
   // Delete DB
   after((done) => {
     mongoose.connection.db.dropDatabase(() => {
@@ -88,10 +152,11 @@ describe('The socket routes', (done) => {
     clientSocket.emit('JOIN_ROOM', user._id);
     // Success
     clientSocket.on('UPDATED_CONFIG', (newConfig) => {
-      expect(newConfig.owner_id).to.eql(user._id);
-      if (notCalled)
+      if (notCalled) {
+        expect(newConfig.owner_id).to.eql(user._id);
+        notCalled = !notCalled;
         done();
-      notCalled = !notCalled;
+      }
     });
     // Make request
     request('localhost:8080')
@@ -109,13 +174,11 @@ describe('The socket routes', (done) => {
     clientSocket.emit('JOIN_ROOM', user._id);
     // Listen for evetn
     clientSocket.on('UPDATED_CONFIG', (newConfig) => {
-      expect(newConfig.owner_id).to.eql(user._id);
-      expect(newConfig.name.first).to.eql('Sam');
-      expect(newConfig.name.last).to.eql('Heutmaker');
       // Ensure done is only called once.
       if (notCalled) {
-        done();
+        expect(newConfig.owner_id).to.eql(user._id);
         notCalled = !notCalled;
+        done();
       }
     });
     // Make request
