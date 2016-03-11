@@ -46,6 +46,7 @@ module.exports = exports = function(io) {
         });
       }
 
+
       // Populate default config
       foundUserFile.populateConfig()
         .then(function(newData) {
