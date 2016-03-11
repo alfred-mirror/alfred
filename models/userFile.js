@@ -13,8 +13,14 @@ var userFileSchema = mongoose.Schema({
   },
   config: Object,
   default_config: String,
-  twitter_token: String,
-  weather_token: String
+  news_token: {
+    type: String,
+    default: '9159dc7a40755189f3356208d9fd6691:14:61615709'
+  },
+  weather_token: {
+    type: String,
+    default: 'ac63c928ee86e580e68b306e9ddf62fb'
+  }
 });
 
 // Initialize

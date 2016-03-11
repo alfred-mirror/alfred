@@ -61,7 +61,7 @@ var widgetSchema = new mongoose.Schema({
     },
     top: {
       type: Number,
-      default: 5
+      default: 3
     },
 
 
