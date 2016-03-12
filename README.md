@@ -2,7 +2,7 @@
 
 ### An Internet-of-Things smart mirror built with JavaScript and Raspberry Pi - works with a [client-side dashboard](https://github.com/alfred-mirror/alfred-dashboard) which pushes directly to the [mirror display](https://github.com/alfred-mirror/alfred-display).
 
-#### The App is on [Heroku](http://alfred-dashboard.herokuapp.com/)
+#### The App is on [Heroku](http://alfred-new.herokuapp.com/)
 It is recommended to use the deployed version of this app so you don't have to constantly run a local server. However, an installation guide for a local server is included below.
 
 #### Installation to Run Locally
